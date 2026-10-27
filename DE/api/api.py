@@ -1,6 +1,35 @@
-# use openMeteo API for weather data
-# overpass API for POI
-# Longo/ iTIC API for congestion (MAYBE NOT NEEDED)
-# openAQ API for air quality
+"""Combine the CCTV image dataframe with other data sources and save it.
 
-# this file is put all the other API calls together, and return the data in a single JSON format
+Weather (Open-Meteo), POIs (Overpass) and congestion could be added here
+the same way as air quality: one function per source, called from make_df().
+"""
+
+import sys
+from pathlib import Path
+
+# Add the parent directory (DE) to Python's search path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+import base_and_object_detection.base as base
+import airquality as aq
+
+OUTPUT_PATH = Path("data/processed/test.csv")
+
+
+def make_df():
+    df_base = base.create_df()
+    # 'hourly_timestamp' is naive local time (Asia/Bangkok); the module converts to UTC
+    return aq.build_dataset(df_base, timestamp_col="hourly_timestamp")
+
+
+def main():
+    df = make_df()
+    print(df.head())
+    print(df.info())
+
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUTPUT_PATH, index=False)
+
+
+if __name__ == "__main__":
+    main()
