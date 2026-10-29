@@ -40,8 +40,8 @@ import pandas as pd
 import requests
 from scipy.spatial import cKDTree
 
-import poi
-import poi_select
+from . import poi
+from . import poi_select
 
 INDEX_PATH = "data/raw/poi_index.parquet"
 # Folder-style URL that serves poi_index.parquet and poi_index.parquet.meta.json, e.g. a GitHub

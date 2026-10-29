@@ -4,31 +4,32 @@ Weather (Open-Meteo), POIs (Overpass) and congestion could be added here
 the same way as air quality: one function per source, called from make_df().
 """
 
-import sys
 from pathlib import Path
+import sys
+import os
+# Add the parent directory (DE/) to the system path so Python can find airquality
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Add the parent directory (DE) to Python's search path
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+from . import airquality as aq
 
 import base_and_object_detection.base as base
-import airquality as aq
-import weather as weather
-import poi as poi
-import poi_local as poi_local
+from . import weather as weather
+from . import poi as poi
+from . import poi_local as poi_local
 
 OUTPUT_PATH = Path("data/processed/test.csv")
 
 index = poi_local.PoiIndex(poi_local.INDEX_PATH)
 
-def make_df():
-    df_base = base.create_df()
-    df = aq.build_dataset(df_base, timestamp_col="hourly_timestamp")
+def make_df(base_df):
+    df = aq.build_dataset(base_df, timestamp_col="hourly_timestamp")
     df = weather.add_weather(df, timestamp_col="hourly_timestamp")
     df = poi_local.add_poi(df)
     return df
 
 def main():
-    df = make_df()
+    base_df = base.create_df()
+    df = make_df(base_df)
     print(df.head())
     print(df.info())
 
