@@ -10,3 +10,4 @@ build/
 data/image/
 data/processed/
 data/cached/
+data/poi_tiles/
