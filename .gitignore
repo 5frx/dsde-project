@@ -11,3 +11,6 @@ data/image/
 data/processed/
 data/cached/
 data/poi_tiles/
+data/raw/thailand_osm/
+data/raw/poi_index.parquet
+data/raw/poi_index.parquet.meta.json
