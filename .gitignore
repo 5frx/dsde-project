@@ -9,4 +9,5 @@ build/
 *.egg-info/
 data/image/
 data/processed/
-data/cached/
+data/cached/\
+yolov8m.pt
