@@ -14,15 +14,17 @@ import base_and_object_detection.base as base
 import airquality as aq
 import weather as weather
 import poi as poi
+import poi_local as poi_local
 
 OUTPUT_PATH = Path("data/processed/test.csv")
 
+index = poi_local.PoiIndex(poi_local.INDEX_PATH)
 
 def make_df():
     df_base = base.create_df()
     df = aq.build_dataset(df_base, timestamp_col="hourly_timestamp")
     df = weather.add_weather(df, timestamp_col="hourly_timestamp")
-    df = poi.add_poi(df)
+    df = poi_local.add_poi(df)
     return df
 
 def main():

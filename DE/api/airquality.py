@@ -5,12 +5,26 @@ Import and call `build_dataset()`, or run the file directly:
 
 Nothing runs at import time: the session, API key check and cache are all
 created inside functions.
+
+How missing PM2.5 is handled
+  1. Every PM2.5 station within SEARCH_RADIUS_M of a coordinate is ranked by distance.
+  2. Stations whose reporting period (datetimeFirst/datetimeLast) does not overlap the
+     dataset's time range are dropped before any hourly data is downloaded.
+  3. For each hour, the reading comes from the nearest remaining station that has one;
+     hours it is missing are filled from the next-nearest station, and so on, up to
+     CANDIDATE_STATIONS stations. Stations are downloaded lazily, so no more API calls
+     are made once every hour for a coordinate is filled.
+  4. The output records where each reading came from: `location_id` / `sensor_id` are the
+     station that supplied the PM2.5 value, `station_distance_m` is how far away it is, and
+     `is_fallback` is 1 when it was not the nearest usable station. Hours no station covers
+     are left as NaN.
 """
 
 import json
+import math
 import os
 import time
-from typing import Optional
+from typing import Callable, Optional
 
 import pandas as pd
 import requests
@@ -26,9 +40,12 @@ DEFAULT_TZ = "Asia/Bangkok"         # timezone of naive timestamps in that colum
 
 PARAMETER = "pm25"
 SEARCH_RADIUS_M = 5000
-CANDIDATE_STATIONS = 5   # nearby stations to scan for one with a PM2.5 sensor
+CANDIDATE_STATIONS = 5   # most stations used per coordinate (nearest first) to fill gaps
 PAGE_LIMIT = 1000
 USER_AGENT = "dsde-project/1.0 (6838075421@student.chula.ac.th)"
+
+# Columns this module adds. They describe the station that supplied each PM2.5 value.
+SOURCE_COLS = ["location_id", "sensor_id", "station_distance_m", "is_fallback"]
 
 
 # --------------------------------------------------------------------------- #
@@ -73,6 +90,7 @@ def api_get(session: requests.Session, path: str, params: Optional[dict] = None,
             time.sleep(wait)
             continue
 
+        # print(response.url)
         response.raise_for_status()
 
         if response.headers.get("x-ratelimit-remaining") == "0":
@@ -101,7 +119,7 @@ def save_cache(cache: dict, path: str = CACHE_PATH) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# Step 1: coordinates -> station / sensor
+# Step 1: coordinates -> ranked list of nearby stations
 # --------------------------------------------------------------------------- #
 def add_coord_key(df: pd.DataFrame, decimals: int = 4) -> pd.DataFrame:
     """Add a 'coord_key' column (rounded 'lat,lon') used to dedupe lookups."""
@@ -113,6 +131,15 @@ def add_coord_key(df: pd.DataFrame, decimals: int = 4) -> pd.DataFrame:
     return df
 
 
+def haversine_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Distance between two points in metres."""
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dphi = p2 - p1
+    dlmb = math.radians(lon2 - lon1)
+    a = math.sin(dphi / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dlmb / 2) ** 2
+    return 2 * 6_371_000 * math.asin(math.sqrt(a))
+
+
 def pick_sensor_id(location: dict, parameter: str = PARAMETER) -> Optional[int]:
     """Return the id of the sensor measuring `parameter` at a location, if any."""
     for sensor in location.get("sensors", []):
@@ -121,40 +148,73 @@ def pick_sensor_id(location: dict, parameter: str = PARAMETER) -> Optional[int]:
     return None
 
 
-def find_station(session: requests.Session, coord_key: str,
-                 radius: int = SEARCH_RADIUS_M, candidates: int = CANDIDATE_STATIONS,
-                 parameter: str = PARAMETER) -> dict:
-    """Find the nearest station near a coordinate that has a `parameter` sensor."""
+def _utc_str(value) -> Optional[str]:
+    """OpenAQ datetimes are {'utc': ..., 'local': ...}; return the UTC string or None."""
+    if isinstance(value, dict):
+        value = value.get("utc")
+    return value or None
+
+
+def find_stations(session: requests.Session, coord_key: str,
+                  radius: int = SEARCH_RADIUS_M, parameter: str = PARAMETER) -> list:
+    """Every station near a coordinate with a `parameter` sensor, nearest first.
+
+    Each entry keeps the station's reporting period so stations that never reported
+    during the dataset's time range can be skipped later without another API call.
+    """
+    lat, lon = (float(x) for x in coord_key.split(","))
     results = api_get(session, "locations", {
         "coordinates": coord_key,
         "radius": radius,
-        "limit": candidates,
+        "limit": PAGE_LIMIT,
     })["results"]
 
+    found = []
     for location in results:
         sensor_id = pick_sensor_id(location, parameter)
-        if sensor_id is not None:
-            return {"location_id": location["id"], "sensor_id": sensor_id}
-    return {"location_id": None, "sensor_id": None}
-
-
-def resolve_stations(session: requests.Session, df: pd.DataFrame, cache: dict) -> pd.DataFrame:
-    """Look up each unique coordinate once and add 'location_id'/'sensor_id' columns."""
-    stations = cache["stations"]
-    unique_keys = df["coord_key"].unique()
-
-    for i, key in enumerate(unique_keys, start=1):
-        if key in stations:
+        coords = location.get("coordinates") or {}
+        if sensor_id is None or coords.get("latitude") is None:
             continue
-        stations[key] = find_station(session, key)
-        save_cache(cache)
-        print(f"[stations {i}/{len(unique_keys)}] {key} -> {stations[key]}")
+        found.append({
+            "location_id": location["id"],
+            "sensor_id": sensor_id,
+            "name": location.get("name"),
+            "distance_m": round(haversine_m(lat, lon, coords["latitude"], coords["longitude"])),
+            "first": _utc_str(location.get("datetimeFirst")),
+            "last": _utc_str(location.get("datetimeLast")),
+        })
+    return sorted(found, key=lambda c: c["distance_m"])
 
-    df = df.copy()
-    for col in ("location_id", "sensor_id"):
-        values = df["coord_key"].map(lambda k, c=col: stations[k][c])
-        df[col] = pd.to_numeric(values, errors="coerce").astype("Int64")
-    return df
+
+def resolve_stations(session: requests.Session, coord_keys, cache: dict,
+                     cache_path: str = CACHE_PATH) -> None:
+    """Look up each unique coordinate once and store its ranked stations in the cache."""
+    stations = cache["stations"]
+    coord_keys = list(coord_keys)
+
+    for i, key in enumerate(coord_keys, start=1):
+        # Older caches stored a single {location_id, sensor_id} dict; redo those.
+        if isinstance(stations.get(key), list):
+            continue
+        stations[key] = find_stations(session, key)
+        save_cache(cache, cache_path)
+        nearest = stations[key][0]["distance_m"] if stations[key] else None
+        print(f"[stations {i}/{len(coord_keys)}] {key} -> {len(stations[key])} "
+              f"{PARAMETER} station(s), nearest {nearest} m")
+
+
+def usable_stations(candidates: list, start: str, end: str,
+                    limit: int = CANDIDATE_STATIONS) -> list:
+    """Drop stations that never reported during [start, end], then keep the nearest `limit`."""
+    start_ts, end_ts = pd.Timestamp(start), pd.Timestamp(end)
+    kept = []
+    for cand in candidates:
+        if cand["last"] and pd.Timestamp(cand["last"]) < start_ts:
+            continue
+        if cand["first"] and pd.Timestamp(cand["first"]) > end_ts:
+            continue
+        kept.append(cand)
+    return kept[:limit]
 
 
 # --------------------------------------------------------------------------- #
@@ -176,6 +236,9 @@ def fetch_sensor_hours(session: requests.Session, sensor_id: int,
     """Download all hourly rows for one sensor between start and end (paginated)."""
     rows, page = [], 1
     while True:
+        if (sensor_id == 16312587):  # OpenAQ bug: this sensor returns 500 on page > 1
+            print(f"[sensor {sensor_id}] skipping page {page} due to OpenAQ bug")
+            break
         results = api_get(session, f"sensors/{sensor_id}/hours", {
             "datetime_from": start,
             "datetime_to": end,
@@ -188,46 +251,81 @@ def fetch_sensor_hours(session: requests.Session, sensor_id: int,
         page += 1
 
 
-def fetch_all_sensors(session: requests.Session, sensor_ids, start: str, end: str,
-                      cache: dict) -> pd.DataFrame:
-    """Fetch hourly data for every sensor once and return one tidy DataFrame."""
-    frames = []
-    sensor_ids = [int(s) for s in sensor_ids]
+def sensor_series(session: requests.Session, sensor_id: int, start: str, end: str,
+                  cache: dict, cache_path: str = CACHE_PATH) -> pd.Series:
+    """Hourly values for one sensor as a Series indexed by UTC hour (cached on disk)."""
+    cache_key = f"{int(sensor_id)}|{start}|{end}"  # range is part of the key
+    if (sensor_id == 16312587):  # OpenAQ bug: this sensor returns 500 on page > 1
+        print(f"[sensor {sensor_id}] skipping due to OpenAQ bug")
+        return pd.Series(dtype=float, index=pd.DatetimeIndex([], tz="UTC"))
+    if cache_key not in cache["hours"]:
+        cache["hours"][cache_key] = fetch_sensor_hours(session, int(sensor_id), start, end)
+        save_cache(cache, cache_path)
+        print(f"[sensor {sensor_id}] {len(cache['hours'][cache_key])} rows")
 
-    for i, sensor_id in enumerate(sensor_ids, start=1):
-        cache_key = f"{sensor_id}|{start}|{end}"  # range is part of the key
-        if cache_key not in cache["hours"]:
-            cache["hours"][cache_key] = fetch_sensor_hours(session, sensor_id, start, end)
-            save_cache(cache)
-            print(f"[sensors {i}/{len(sensor_ids)}] {sensor_id}: "
-                  f"{len(cache['hours'][cache_key])} rows")
+    rows = cache["hours"][cache_key]
+    empty = pd.Series(dtype=float, index=pd.DatetimeIndex([], tz="UTC"))
+    if not rows:
+        return empty
 
-        rows = cache["hours"][cache_key]
-        if not rows:
+    frame = pd.json_normalize(rows)
+    if "value" not in frame.columns:
+        return empty
+    frame["hour"] = to_utc_hour(frame["period.datetimeFrom.utc"])
+    frame = frame.dropna(subset=["value"])
+    return frame.groupby("hour")["value"].mean()
+
+
+# --------------------------------------------------------------------------- #
+# Step 3: fill each hour from the nearest station that has a reading
+# --------------------------------------------------------------------------- #
+def fill_coordinate(needed_hours, candidates: list,
+                    series_for: Callable[[dict], pd.Series]) -> pd.DataFrame:
+    """Fill every needed hour from the nearest candidate that has a value.
+
+    `candidates` must be nearest-first. `series_for(candidate)` returns that station's
+    hourly Series (it is only called while hours are still missing, so stations further
+    away are never downloaded unless needed). Returns one row per filled hour.
+    """
+    columns = ["hour", PARAMETER, *SOURCE_COLS]
+    remaining = pd.DatetimeIndex(pd.unique(needed_hours))
+    pieces = []
+
+    for rank, cand in enumerate(candidates):
+        if len(remaining) == 0:
+            break
+        hit = series_for(cand).reindex(remaining).dropna()
+        if hit.empty:
             continue
-        frame = pd.json_normalize(rows)
-        frame["sensor_id"] = sensor_id
-        frames.append(frame)
+        pieces.append(pd.DataFrame({
+            "hour": hit.index,
+            PARAMETER: hit.values,
+            "location_id": cand["location_id"],
+            "sensor_id": cand["sensor_id"],
+            "station_distance_m": cand["distance_m"],
+            "is_fallback": int(rank > 0),
+        }))
+        remaining = remaining.difference(hit.index)
 
-    if not frames:
-        return pd.DataFrame(columns=["sensor_id", "hour", "value"])
-
-    air = pd.concat(frames, ignore_index=True)
-    air["hour"] = to_utc_hour(air["period.datetimeFrom.utc"])
-    return air[["sensor_id", "hour", "value"]]
+    if not pieces:
+        return pd.DataFrame(columns=columns)
+    return pd.concat(pieces, ignore_index=True)[columns]
 
 
-# --------------------------------------------------------------------------- #
-# Step 3: join back onto every original row
-# --------------------------------------------------------------------------- #
-def merge_air_quality(df: pd.DataFrame, air: pd.DataFrame,
-                      timestamp_col: str = TIMESTAMP_COL, tz: str = DEFAULT_TZ) -> pd.DataFrame:
-    """Left-join hourly air-quality values onto the original rows."""
-    df = df.copy()
-    df["hour"] = to_utc_hour(df[timestamp_col], tz)
-    air = air.assign(sensor_id=air["sensor_id"].astype("Int64"))
-    air = air.rename(columns={"value": PARAMETER})
-    return df.merge(air, on=["sensor_id", "hour"], how="left")
+def print_coverage(df: pd.DataFrame) -> None:
+    """Summarise how much PM2.5 was found, and how much came from fallback stations."""
+    total = len(df)
+    have = df[PARAMETER].notna()
+    fallback = (df["is_fallback"] == 1).sum()
+    print(f"\nPM2.5 found for {have.sum()}/{total} rows ({have.mean():.0%}); "
+          f"{fallback} of those came from a fallback station")
+
+    per_coord = df.groupby("coord_key")[PARAMETER].apply(lambda s: s.notna().mean())
+    weak = per_coord[per_coord < 0.5]
+    if len(weak):
+        print(f"{len(weak)} coordinate(s) still have under 50% coverage, e.g.:")
+        for key, share in weak.sort_values().head(5).items():
+            print(f"  {key}: {share:.0%}")
 
 
 # --------------------------------------------------------------------------- #
@@ -236,23 +334,48 @@ def merge_air_quality(df: pd.DataFrame, air: pd.DataFrame,
 def build_dataset(df: pd.DataFrame, timestamp_col: str = TIMESTAMP_COL,
                   tz: str = DEFAULT_TZ, cache_path: str = CACHE_PATH,
                   session: Optional[requests.Session] = None) -> pd.DataFrame:
-    """Add location_id, sensor_id and an hourly PM2.5 column to a dataframe.
+    """Add an hourly PM2.5 column plus the station that supplied each value.
 
     `df` needs 'latitude', 'longitude' and `timestamp_col`. Naive timestamps
-    are treated as local time in `tz`.
+    are treated as local time in `tz`. Added columns: pm25, location_id, sensor_id,
+    station_distance_m, is_fallback (plus the helper columns coord_key and hour).
     """
     session = session or build_session()
     cache = load_cache(cache_path)
 
-    df = add_coord_key(df)
-    df = resolve_stations(session, df, cache)
+    # Re-running on an already-built frame must not create duplicate columns.
+    df = add_coord_key(df.drop(columns=[c for c in [PARAMETER, *SOURCE_COLS] if c in df.columns]))
+    df["hour"] = to_utc_hour(df[timestamp_col], tz)
 
-    hours = to_utc_hour(df[timestamp_col], tz)
     fmt = "%Y-%m-%dT%H:%M:%SZ"
-    start, end = hours.min().strftime(fmt), hours.max().strftime(fmt)
+    start, end = df["hour"].min().strftime(fmt), df["hour"].max().strftime(fmt)
 
-    air = fetch_all_sensors(session, df["sensor_id"].dropna().unique(), start, end, cache)
-    return merge_air_quality(df, air, timestamp_col, tz)
+    resolve_stations(session, df["coord_key"].unique(), cache, cache_path)
+
+    filled = []
+    for key, hours in df.groupby("coord_key")["hour"]:
+        candidates = usable_stations(cache["stations"][key], start, end)
+        if not candidates:
+            print(f"{key}: no usable {PARAMETER} station within {SEARCH_RADIUS_M} m")
+            continue
+        result = fill_coordinate(
+            hours, candidates,
+            lambda c: sensor_series(session, c["sensor_id"], start, end, cache, cache_path),
+        )
+        filled.append(result.assign(coord_key=key))
+
+    if filled:
+        air = pd.concat(filled, ignore_index=True)
+    else:
+        air = pd.DataFrame(columns=["coord_key", "hour", PARAMETER, *SOURCE_COLS])
+
+    merged = df.merge(air, on=["coord_key", "hour"], how="left")
+    for col in ("location_id", "sensor_id", "is_fallback"):
+        merged[col] = pd.to_numeric(merged[col], errors="coerce").astype("Int64")
+    merged[PARAMETER] = pd.to_numeric(merged[PARAMETER], errors="coerce")
+
+    print_coverage(merged)
+    return merged
 
 
 def main() -> None:
