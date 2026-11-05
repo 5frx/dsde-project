@@ -1,0 +1,4 @@
+level,rows,varies at this level
+image,"61,319",vehicle counts (plus detector noise)
+camera-hour,"10,728","PM2.5, weather, averaged traffic"
+camera,100,"POI and road features, mean traffic"

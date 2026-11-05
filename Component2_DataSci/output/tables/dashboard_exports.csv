@@ -1,0 +1,4 @@
+,file,rows,columns,grain
+0,Component2_DataSci/output/dashboard/cameras.csv,100,39,"one row per camera: location, profile type, mean counts, POI features"
+1,Component2_DataSci/output/dashboard/camera_hours.csv,10728,16,"one row per camera-hour: counts, expected value, deviation score"
+2,Component2_DataSci/output/dashboard/anomaly_flags.csv,317,17,one row per flagged camera-hour

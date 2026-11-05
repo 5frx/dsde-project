@@ -1,0 +1,5 @@
+,car_count,motorcycle_count,bus_count,truck_count
+car_count,1.0,0.247,0.589,0.592
+motorcycle_count,0.247,1.0,0.345,0.18
+bus_count,0.589,0.345,1.0,0.374
+truck_count,0.592,0.18,0.374,1.0
