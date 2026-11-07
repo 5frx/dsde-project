@@ -146,5 +146,3 @@ def CarsDetection_df(df: pd.DataFrame):
     final_df = pd.concat([df, counts_df], axis=1)
     shutil.rmtree(STAGING_DIR)
     return final_df
-
-CarsDetection()
