@@ -1,0 +1,7 @@
+{
+  "n_camera_hours": 10615,
+  "n_station_clusters": 31,
+  "r_squared_in_sample": 0.7235170855377926,
+  "formula": "pm25 ~ log_total + C(camera_id) + C(hour_of_day) + C(date) + temperature_2m + precipitation + wind_speed_10m + relative_humidity_2m + cloud_cover + surface_pressure",
+  "warning": "Observational association only; weather, location/time controls do not identify causal traffic effects. Model fit is in-sample."
+}

@@ -1,0 +1,17 @@
+{
+  "image_rows": 60815,
+  "camera_hours": 10659,
+  "cameras": 100,
+  "stations": 31,
+  "pm25_valid_images": 60771,
+  "pm25_valid_camera_hours": 10615,
+  "pm25_missing_images": 44,
+  "zero_pm25_camera_hours": 299,
+  "fallback_share_pm25_camera_hours": 0.39726801695713615,
+  "max_station_distance_m": 3495.0,
+  "pm25_conflicts_within_camera_hour": 0,
+  "sensor_conflicts_within_camera_hour": 0,
+  "start": "2026-08-25 06:00:00",
+  "end": "2026-08-31 21:00:00",
+  "unique_station_utc_hours": 3025
+}
