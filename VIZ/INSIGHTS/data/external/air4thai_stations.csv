@@ -1,0 +1,80 @@
+stationID,nameEN,areaEN,stationType,lat,long
+02t,Bansomdejchaopraya Rajabhat University,"Hiran Ruchi, Khet Thon Buri, Bangkok",GROUND,13.732846,100.487662
+03t,Highway NO.3902 km.13 +600,"Kanchanaphisek Rd, Bang Khun Thian, Bangkok",GROUND,13.636514,100.414262
+05t,Thai Meteorological Department ,"Bang Na, Khet Bang Na, Bangkok",GROUND,13.666183,100.605742
+12t,Nonsi Witthaya School,"Chong Nonsi, Khet Yannawa, Bangkok",GROUND,13.70806667,100.5473333
+50t,Chulalongkorn Hospital,"Rama IV Rd. Khet Pathum Wan, Bangkok",GROUND,13.729852,100.536501
+52t,Thonburi Power Sub-Station,"Intarapitak Rd. Khet Thon Buri, Bangkok",GROUND,13.727622,100.486568
+53t,Chokchai Police Station,"Lat Phrao Rd. Khet Wang Thonglang, Bangkok",GROUND,13.7954248,100.5930298
+54t,National Housing Authority Dindaeng,"Din Daeng Rd. Khet Din Daeng, Bangkok",GROUND,13.76251667,100.5502
+59t,The Government Public Relations Department ,"Phaya Thai, Khet Phaya Thai, Bangkok",GROUND,13.783185,100.540489
+61t,Bodindecha Sing Singhaseni School,"Pubpla, Khet Wang Thonglang, Bangkok",GROUND,13.769634,100.614567
+bkp100t,"Bueng Kum District Office, Bangkok","Khlong Kum, Bueng Kum, Bangkok",BKK,13.785212,100.669183
+bkp101t,"Khlong Sam Wa District Office, Bangkok","Khlong Sam Wa, Bangkok",BKK,13.859911,100.704002
+bkp102t,"Chomthong District Office, Bangkok","Chomthong, Bangkok",BKK,13.677757,100.483861
+bkp103t,"Bang Phlat District Office, Bangkok","Charansanitwong Roadside, Bangkok",BKK,13.793965,100.504956
+bkp104t,"Bang Khae District Office, Bangkok","Bang Khae, Bangkok",BKK,13.696314,100.409049
+bkp105t,"Bang Khun Thian District Office, Bangkok","RamaII Roadside,  Bang Khun Thian, Bangkok",BKK,13.659908,100.435902
+bkp114t,Lumpini park,"Lumpini park, Pathum Wan, Bangkok",BKK,13.732225,100.5448381
+bkp115t,Wacchirabenchatat Park,"Wacchirabenchatat Park, Chatuchak, Bangkok",BKK,13.8118516,100.5535825
+bkp116t,Chatuchak Park,"Chatuchak Park, Chatuchak, Bangkok",BKK,13.802546,100.5509191
+bkp117t,Suan Luang Rama IX,"Suan Luang Rama IX, Pravet, Bangkok",BKK,13.6881393,100.6579657
+bkp118t,"60th Anniversary of Queen Sirikit Park ,Kheha Romklao Road, Lat Krabang, Bangkok","60th Anniversary of Queen Sirikit Park, Lat Krabang, Bangkok",BKK,13.7631141,100.7302101
+bkp119t,Benchasiri Park,"Benchasiri Park, Klong Toei, Bangkok",BKK,13.7304916,100.5684634
+bkp120t,Rommani Thungsikan Park,"Rommani Thungsikan Park, Don Mueang, Bangkok",BKK,13.9288678,100.5684666
+bkp121t,Thonburirom Park,"Thonburirom Park, Thung Khru, Bangkok",BKK,13.6502295,100.4909771
+bkp122t,Benjakitti Park,"Benjakitti Park, Khlong Toei, Bangkok",BKK,13.7328791,100.5600172
+bkp123t,Queen Sirikit Park,"Queen Sirikit Park, Chatuchak, Bangkok",BKK,13.8055472,100.5488338
+bkp124t,80th Anniversary Commemoration Park,"80th Anniversary Commemoration Park, Bangkok Noi, Bangkok",BKK,13.7716446,100.4681128
+bkp125t,Serithai Park,"Serithai Park, Bueng Kum, Bangkok",BKK,13.7855673,100.6733359
+bkp126t,Bang Khae Phirom Park,"Bang Khae Phirom Park, Bang Khae, Bangkok",BKK,13.6863478,100.3844036
+bkp127t,Thawee Wanarom Park,"Thawee Wanarom Park, Thawi Watthana, Bangkok",BKK,13.7435329,100.3526893
+bkp128t,Phra Nakhon Park,"Phra Nakhon Park, Lat Krabang, Bangkok",BKK,13.7201042,100.7807077
+bkp129t,Nong Chok Park,"Nong Chok Park, Nong Chok, Bangkok",BKK,13.855656,100.8585539
+bkp130t,Ramintra Sports Park,"Ramintra Sports Park, Bang Khen, Bangkok",BKK,13.8778763,100.6207085
+bkp131t,Public Park to commemorate the sixth anniversary of His Majesty the King,"Public Park to commemorate the sixth anniversary of His Majesty the King, Bang Kho Laem, Bangkok",BKK,13.685524189587932,100.51830028147444
+bkp133t,Rama VIII Park,"Rama VIII Park, Bang Plad, Bangkok",BKK,13.7693437,100.4945337
+bkp56t,"Din Dang, Bangkok","Din Dang, Bangkok",BKK,13.7619223,100.558606
+bkp57t,"Phra Kanong District Office,  Bangkok","Phra Kanong, Bangkok",BKK,13.691511,100.61457
+bkp58t,"Rat Burana District Office,  Bangkok","Rat Burana, Bangkok",BKK,13.6821364,100.5060513
+bkp59t,"Ratchathewi District Office, Bangkok","Phayathai Roadside, Ratchathewi, Bangkok",BKK,13.7590851,100.5345788
+bkp60t,"Dusit District Office, Bangkok","RamaV Roadside, Dusit, Bangkok",BKK,13.776664,100.520982
+bkp61t,National Economic and Social Development Council Office,"Krung Kasem Roadside, Pom Prap Sattru Phai, Bangkok",BKK,13.756281,100.514267
+bkp62t,Odeon Circus,"TheeMitr Roadside, Samphanthawong, Bangkok",BKK,13.737136,100.512734
+bkp63t,Army Apartment Sam Sen,"RamaVI Roadside, Phaya Thai, Bangkok",BKK,13.783554,100.5344645
+bkp64t,"Wang Thonglang District Office, Bangkok","Lat Phrao Rd Soi 95, Wang Thonglang, Bangkok",BKK,13.778981,100.622294
+bkp65t,Samyan Mitrtown,"RamaIV Roadside, Pathum Wan, Bangkok",BKK,13.733136,100.52829
+bkp66t,Bangrak Lovely Plaza,"Narathiwat Roadside, Bang Rak, Bangkok",BKK,13.726136,100.528055
+bkp67t,"Sathon District Office, Bangkok","Thung Wat Don, Sathon, Bangkok",BKK,13.707763,100.526787
+bkp69t,"Bank of Ayuthaya Head Office Yan Nawa, Bangkok","RamaIII Roadside, Yan Nawa, Bangkok",BKK,13.679226,100.54687
+bkp70t,"Soi Sukhumwit 63 Roadside Wattana, Bangkok","Soi Sukhumwit 63 Roadside, Wattana, Bangkok",BKK,13.722096,100.584559
+bkp71t,"Suan Luang District Office, Bangkok","Suan Luang, Bangkok",BKK,13.731051,100.651705
+bkp72t,Big C Supercenter Bang Na,"Bang Na-Trat Roadside, Bang na, Bangkok",BKK,13.667987,100.635313
+bkp73t,Kasertsart University,"Kasertsart Intersection, Chatuchak, Bangkok",BKK,13.839923,100.575632
+bkp74t,"Don Mueng District Office, Bangkok","Don Mueng, Bangkok",BKK,13.910986,100.594877
+bkp75t,"Sai Mai District Office, Bangkok","Sukhaphiban 5 Roadside, Sai Mai, Bangkok",BKK,13.896035,100.660628
+bkp76t,"Bang Kapi District Office, Bangkok","Navamin Roadside, Bang Kapi, Bangkok",BKK,13.766478,100.647785
+bkp77t,Suan Sayam-Ram Intra Intersection,"Suan Sayam-Ram Intra Intersection Khan Na Yao, Bangkok",BKK,13.813844,100.686594
+bkp78t,Lat Krabang Hospital,"Lat Krabang Roadside, Lat Krabang, Bangkok",BKK,13.72205,100.784069
+bkp79t,"Chaloem Phrakiat Rama 9 Park Min buri, Bangkok","Sihaburanukit Roadside, Meenburi, Bangkok",BKK,13.813578,100.73208
+bkp80t,"Nong Chok District Office, Bangkok","Liap Wari Roadsire, Nong Chok, Bangkok",BKK,13.855362,100.86267
+bkp81t,Seacon Square,"Srinakarin Roadside, Prawet, Bangkok",BKK,13.695561,100.647615
+bkp82t,Mahaisawan Intersection,"Ratchadaphisek Roadside, Thon Buri, Bangkok",BKK,13.70515,100.48465
+bkp83t,Library under King Taksin Bridge,"Charoen Nakorn Roadside, Klong San, Bangkok",BKK,13.719705,100.508782
+bkp84t,Tha phra Intersection,"Tha phra Intersection, Bangkok Yai, Bangkok",BKK,13.729431,100.474373
+bkp85t,Bangkok Noi Train Police Station,"Soi Nikhom Banphak Rodfai Thonburi5, Bangkok Noi, Bangkok",BKK,13.759619,100.481137
+bkp86t,Phutthamonthon 1 - Borommaratchachonnani Intersection,"Phutthamonthon 1 Roadside, Taling Chan, Bangkok",BKK,13.780778,100.426727
+bkp87t,Thon Buri Market Sanam Luang 2,"Klong Thawi Watthana Roadside, Thawi Watthana, Bangkok",BKK,13.746257,100.355099
+bkp88t,Siam University,"Petchkasem Roadside, Phasi Charoen, Bangkok",BKK,13.718689,100.45391
+bkp89t,"Ma Charean Roadside, Petcha Kasem 8, Nong Khaem","Ma Charean Roadside Nong Khaem, Bangkok",BKK,13.705582,100.343164
+bkp90t,Bang Bon 5 Market,"Ekkachai Roadside, Bang Bon, Bangkok",BKK,13.639165,100.372958
+bkp91t,King Mongkut's University of Technology Thonburi ,"Pracha Uthit Roadside, Thung Khru, Bangkok",BKK,13.651004,100.496673
+bkp92t,"Phra Nakhon District Office, Bangkok","Samsen Roadside, Phra Nakhon, Bangkok",BKK,13.76415,100.499077
+bkp93t,"Huai Khwang District Office, Bangkok","Huai Khwang, Bangkok",BKK,13.77682,100.579543
+bkp94t,"Khlong Toei District Office, Bangkok","Khlong Toei, Bangkok",BKK,13.708488,100.583747
+bkp95t,"Bang Sue District Office, Bangkok","Bang Sue, Bangkok",BKK,13.809596,100.537883
+bkp96t,"Ladphrao District Office, Bangkok","Ladphrao, Bangkok",BKK,13.803587,100.607535
+bkp97t,"Lak Si District Office, Bangkok","Thung Song Hong, Lak Si, Bangkok",BKK,13.887395,100.579247
+bkp98t,"Bang Khen District Office, Bangkok","Phahon Yothin Roadside, Bang Khen, Bangkok",BKK,13.873603,100.595839
+bkp99t,"Saphan Sung District Office, Bangkok","Saphan Sung, Bangkok",BKK,13.768892,100.685743
+o10,National Housing Authority Klongchan,"Klong Chan, Khet Bang Kapi, Bangkok",GROUND,13.779873,100.646009

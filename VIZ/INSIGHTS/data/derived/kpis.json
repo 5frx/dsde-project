@@ -1,0 +1,23 @@
+{
+  "weekend_change_pct": -20.8,
+  "am_peak_slot": "08:50",
+  "pm_peak_slot": "16:50",
+  "pm_peak_vehicles": 14.4,
+  "frames": 60815,
+  "cameras": 100,
+  "vehicles_counted": 649685,
+  "sunset": "18:34\u201318:30",
+  "dusk_drop_pct": -40.5,
+  "dusk_brightness_drop_pct": -15.3,
+  "heavy_rain_change_pct": 1.0,
+  "rain_hours_share": 34.0,
+  "a4t_stations_used": 29,
+  "a4t_median_m": 1004,
+  "pm25_a4t_mean": 11.7,
+  "lag_rho_max_abs": 0.094,
+  "lowcost_ratio": 0.52,
+  "districts": 20,
+  "rail_stations": 153,
+  "near_rail_cams": 37,
+  "unusual_frames": 951
+}
