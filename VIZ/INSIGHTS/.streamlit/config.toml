@@ -1,1 +1,22 @@
+# Theme and formatting for the insights app.
+[theme]
+base = "light"
+primaryColor = "#b3382a"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f1f2ef"
+textColor = "#1d1d1b"
+borderColor = "#dcddd8"
+baseRadius = "0.25rem"
+font = "Sarabun:https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+baseFontSize = 16
+headingFontSizes = ["2.1rem", "1.45rem", "1.15rem"]
+headingFontWeights = [700, 600, 600]
+metricValueFontSize = "1.9rem"
+metricValueFontWeight = 600
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
 
