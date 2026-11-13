@@ -1,0 +1,32 @@
+sensor_id,location_id,station_name,provider,owner,is_reference_monitor,sensor_type,station_lat,station_lon
+1304065,225689,Phutthamonthon 1 - Borommaratchachonnani Intersection,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.780778,100.426727
+1304091,225596,"Sathon District Office, Bangkok",Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.707763,100.526787
+1304120,2375,Bodindecha Sing Singhaseni School,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.769634,100.614567
+1304128,225653,Chokchai Police Station,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.7954248,100.5930298
+1304152,225650,The Government Public Relations Department,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.783185,100.540489
+1304204,225673,National Housing Authority Dindaeng,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.76251667,100.5502
+1304216,225638,Samyan Mitrtown,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.733136,100.52829
+1304222,5545,Chulalongkorn Hospital,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.729852,100.536501
+1304256,225656,"Bang Sue District Office, Bangkok",Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.809596,100.537883
+1304286,225574,"Phra Kanong District Office,  Bangkok",Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.691511,100.61457
+1304293,225631,National Economic and Social Development Council Office,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.756281,100.514267
+1304305,225688,"Ratchathewi District Office, Bangkok",Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.7590851,100.5345788
+1304328,225612,Bansomdejchaopraya Rajabhat University,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.732846,100.487662
+1304340,225647,"Phra Nakhon District Office, Bangkok",Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.76415,100.499077
+1304357,225641,"Din Dang, Bangkok",Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.7619223,100.558606
+2076216,368397,Rama VIII Park,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.7693437,100.4945337
+5077771,2352,Thonburi Power Sub-Station,Air4Thai,Unknown Governmental Organization,True,Air4Thai (government),13.727622,100.486568
+6530253,1236034,"Watkhemapirataram school 1, Mueang, Nonthaburi",AirGradient,Unknown Person,False,Low-cost sensor,13.823306342907305,100.50341971861288
+7466395,1894642,Savvi Condominium Phahol-Ari,Clarity,Clarity,False,Low-cost sensor,13.77865,100.54655
+8694734,2692437,Nana Nue Pier,AirGradient,Unknown Person,False,Low-cost sensor,13.74828616518107,100.55400303589226
+8694741,2692436,Soi Naradhiwas Rajanagarindra 17/1,AirGradient,Unknown Person,False,Low-cost sensor,13.714227217771464,100.53463637224245
+8694745,2692433,Soi Rimthang Rotfai 3,AirGradient,Unknown Person,False,Low-cost sensor,13.723917563386962,100.4896320971784
+8695095,2692644,Kiak Kai Intersection,AirGradient,Unknown Person,False,Low-cost sensor,13.79695026631216,100.5222724774432
+8695100,2692643,Tang Trong Chit Alley,AirGradient,Unknown Person,False,Low-cost sensor,13.768026699364972,100.46533225829832
+10865435,3097120,Circle Living Prototype,AirGradient,Circle Living Prototype,False,Low-cost sensor,13.750578,100.556228
+11970856,3361246,Suan Phlu,AirGradient,BangkokDi,False,Low-cost sensor,13.721706,100.5393558
+12178031,3401031,Royce Private,,Unknown Person,False,Low-cost sensor,13.7408785546112,100.566174929691
+15116788,6195103,"Mityothin, Chatuchak, Bangkok",AirGradient,Unknown Person,False,Low-cost sensor,13.8237744,100.5667347
+15299805,6220117,Soi Pattanasin,AirGradient,Phattanasin,False,Low-cost sensor,13.78119,100.53811
+15414758,6235850,THE LINE Phahonyothin Park,AirGradient,THE LINE Phahonyothin Park,False,Low-cost sensor,13.817607270599972,100.566363356019
+15808233,6288760,Palm,AirGradient,Palm Estate,False,Low-cost sensor,13.710894,100.541399

@@ -1,0 +1,7 @@
+streamlit>=1.50
+pandas>=2.0
+numpy
+plotly>=5.24
+requests
+python-dotenv
+pydeck
